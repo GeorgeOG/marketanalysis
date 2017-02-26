@@ -6,7 +6,7 @@
 <body>
   <h1>
   <?php
-    $name='Nikita';
+    $name='-';
     echo exec('python i.py "'.$name.'"');
    ?>
  </h1>
