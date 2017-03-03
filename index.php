@@ -4,11 +4,12 @@
   <title>Market Analysis Coursework</title>
 </head>
 <body>
-  <h1>
+  <h1>Market Analysis</h1>
+  <p>
   <?php
-    $name='-';
+    $name='Everyone';
     echo exec('python i.py "'.$name.'"');
    ?>
- </h1>
+ </p>
 </body>
 </html>
