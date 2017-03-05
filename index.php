@@ -4,7 +4,7 @@
   <title>Market Analysis Coursework</title>
 </head>
 <body>
-  <h1>Market Analysis</h1>
+  <img src="title.png" alt="title">
   <p>
   <?php
     $name='Everyone';
