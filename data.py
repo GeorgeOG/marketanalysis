@@ -7,8 +7,7 @@ a=10
 b=2
 c=1.5
 
-#name = sys.argv[0]
-name = 'LSE/BARC'
+name = sys.argv[0]
 data = quandl.get(name, returns='numpy')
 csvfile = open(name.split('/')[1]+'.csv','w+')
 prediction_data =[]
