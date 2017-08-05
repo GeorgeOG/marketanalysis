@@ -8,7 +8,7 @@ os.system('rm codes')
 
 db = MySQLdb.connect(host="localhost",
                      user="georgegarber",
-                     passwd="password",
+                     passwd="***", #remember
                      db="marketanalysisdb")
 
 cur = db.cursor()
@@ -17,11 +17,12 @@ cur.execute(query)
 
 instruments = open("instruments.csv", "r")
 for line in instruments:
-    if line.find('price')==-1:
+    line = line.replace('"','')
+    if line.find('price')==-1 or line.find('Currency')==-1:
         continue
     instrumentid = line[0:line.find(',')]
-    description = line[line.find(',')+2:line.find('price')+5]
-    currency = line[-5:-2]
+    description = line[line.find(',')+1:line.find('price')+5]
+    currency = line[line.find('Currency ')+9:line.find('Currency ')+12]
     query = 'insert ignore into instruments values ("'+instrumentid+'","'+description+'","'+currency+'");'
     cur.execute(query)
 
