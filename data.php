@@ -110,9 +110,7 @@
    <div id='dashboard_div' style='margin:auto; width:70%;'>
    <div id='filter_div'></div>
    <div id='chart_div' style='height: 50%'></div>
+   <p style='text-align:center'><?php if(isset($_GET["stock"])) {echo 'Prediction: '.$p;} ?></p>
    </div>
-   <p style='text-align:center'>
-     Prediction: <?php echo $p; ?>
-   </p>
 </body>
 </html>
