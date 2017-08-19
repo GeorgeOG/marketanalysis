@@ -8,7 +8,7 @@ os.system('rm codes')
 
 db = MySQLdb.connect(host="localhost",
                      user="georgegarber",
-                     passwd="***", #remember
+                     passwd="password",
                      db="marketanalysisdb")
 
 cur = db.cursor()
