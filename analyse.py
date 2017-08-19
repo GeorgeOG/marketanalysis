@@ -1,13 +1,16 @@
 import sys
 import quandl
 import numpy as np
+import datetime
+
+quandl.ApiConfig.api_key = "ZaNCWVQ2Gx8zMKMZwnHn"
 
 name = sys.argv[1]
 data = quandl.get(name, returns='numpy')
 csvfile = open(name.split('/')[1] + '.csv', 'w+')
 prediction_data = []
 for d in data:
-    csvfile.write(str(int(d[1] * 10000) / 10000.0) + '\n')
+    csvfile.write(datetime.datetime.strftime(d[0], '%Y-%m-%d')+', '+str(int(d[1] * 10000) / 10000.0) + '\n')
     prediction_data.append(int(d[1] * 10000) / 10000.0)
 csvfile.close()
 
@@ -25,4 +28,4 @@ for i in range(1, len(prediction_data)-1):
     if i>len(prediction_data)-100:
         scores.append(np.sign(MA1 - MA2)*np.sign(prediction_data[i]-prediction_data[i-1]))
 print(np.sign(MA1 - MA2))
-print(np.mean(scores))
+#print(np.mean(scores))

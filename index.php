@@ -1,15 +1,41 @@
+<?php session_start(); ?>
 <html>
 <head>
   <link rel="icon" href="design/favicon.png" type="image/png" />
-  <title>Market Analysis Coursework</title>
+  <link type="text/css" rel="stylesheet" href="stylesheet.css">
+  <title>MA Login</title>
 </head>
 <body>
-  <img src="design/title.png" alt="title">
-  <p>
-  <?php
-    $name='';
-    echo exec('/usr/local/bin/python /Library/WebServer/Documents/marketanalysis/data.py '.$name);
-   ?>
- </p>
+  <ul>
+    <li><a href="settings.php">Settings</a></li>
+    <li><a href="data.php">Data</a></li>
+    <li><a href="subscriptions.php">Subscriptions</a></li>
+    <li><a class="active" href="index.php">Login</a></li>
+    <li style="float:left"><a style="padding: 0px 16px" href="."><img src="design/title.png" alt="title" width=100 height=100/></a></li>
+  </ul>
+  <div class="textbox">
+  <h1>Login or Sign up!</h1>
+  <hr />
+  <h2>Login</h2>
+  <form action="login.php" method="post">
+    First Name:<br />
+    <input type="text" name="firstname" /><br />
+    Last Name:<br />
+    <input type="text" name="lastname" /><br />
+    Password:<br />
+    <input type="password" name="password" /><br />
+    <input type="submit" value="Login" name=login /><br />
+  </form>
+  <h2>Sign Up</h2>
+  <form action="login.php" method="post">
+    First Name:<br />
+    <input type="text" name="firstname" /><br />
+    Last Name:<br />
+    <input type="text" name="lastname" /><br />
+    Password:<br />
+    <input type="password" name="password" /><br />
+    <input type="submit" value="Sign Up" name=login /><br />
+  </form>
+  </div>
 </body>
 </html>
