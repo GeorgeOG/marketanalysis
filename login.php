@@ -19,12 +19,16 @@
     }
   }
   elseif ($_POST["login"] == "Sign Up") {
+      if (strchr($_POST["firstname"],';') !== FALSE or strchr($_POST["firstname"],',') !== FALSE or strchr($_POST["lastname"],';') !== FALSE or strchr($_POST["lastname"],',') !== FALSE) {
+        header("Location: .");
+      }
       $conn->query("insert into usertbl (firstname, lastname, password)
       values ('".$_POST["firstname"]."','".$_POST["lastname"]."','".password_hash($_POST["password"], PASSWORD_DEFAULT)."')");
       $users=$conn->query("select userid from usertbl where firstname='".$_POST["firstname"]."' and lastname='".$_POST["lastname"]."'");
+
       while($user=$users->fetch_assoc()) {
         $_SESSION['userid'] = $user['userid'];
-        header("Location: subscriptions.php");
+        header("Location: subscriptions.php?h=".strchr($_POST["firstname"],';'));
       }
   }
 ?>

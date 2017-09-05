@@ -30,19 +30,23 @@
   </div>
   <?php
     if (isset($_GET["search"])) {
-      $conn = new mysqli("localhost", "georgegarber", "password", "marketanalysisdb");
-      $stocks = $conn->query("select * from instruments where description like '%".$_GET["search"]."%';");
-      if ($stocks->num_rows==0) {
-        echo "<p>
-        No results
-        </p>";
-      }
-      else {
-        echo "<div class=textbox style='text-align:center'><form action=subscribe.php method=post ><hr />";
-        while ($stock = $stocks->fetch_assoc()) {
-          echo $stock["description"].": <input style='float:right' type=checkbox name=".$stock["instrumentid"]." /><hr />";
+      if (strchr($_GET['search'],';') !== FALSE or strchr($_GET["search"],',') !== FALSE) {
+        echo "Please only search words.";
+      } else {
+        $conn = new mysqli("localhost", "georgegarber", "password", "marketanalysisdb");
+        $stocks = $conn->query("select * from instruments where description like '%".$_GET["search"]."%';");
+        if ($stocks->num_rows==0) {
+          echo "<p>
+          No results
+          </p>";
         }
-        echo "<input type=submit value=Subscribe /></form></div>";
+        else {
+          echo "<div class=textbox style='text-align:center'><form action=subscribe.php method=post ><hr />";
+          while ($stock = $stocks->fetch_assoc()) {
+            echo $stock["description"].": <input style='float:right' type=checkbox name=".$stock["instrumentid"]." /><hr />";
+          }
+          echo "<input type=submit value=Subscribe /></form></div>";
+        }
       }
     }
    ?>
