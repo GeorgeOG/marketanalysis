@@ -6,6 +6,7 @@
   <title>MA Login</title>
 </head>
 <body>
+  <!--this is the nav bar at the top-->
   <ul>
     <li><a href="settings.php">Settings</a></li>
     <li><a href="data.php">Data</a></li>
@@ -16,6 +17,7 @@
   <div class="textbox">
   <h1>Login or Sign up!</h1>
   <hr />
+  <!--the form to login-->
   <h2>Login</h2>
   <form action="login.php" method="post">
     First Name:<br />
@@ -26,6 +28,7 @@
     <input type="password" name="password" /><br />
     <input type="submit" value="Login" name=login /><br />
   </form>
+  <!--the form to sign up-->
   <h2>Sign Up</h2>
   <form action="login.php" method="post">
     First Name:<br />

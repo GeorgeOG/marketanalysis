@@ -22,12 +22,16 @@
     <li style="float:left"><a style="padding: 0px 16px" href="."><img src="design/title.png" alt="title" width=100 height=100/></a></li>
   </ul>
   <?php
+
+  //get the name of the user to echo in a header
   $conn = new mysqli("localhost", "georgegarber", "password", "marketanalysisdb");
   $stocks = $conn->query("select * from instruments inner join subscriptions on (subscriptions.instrumentid=instruments.instrumentid) where subscriptions.userid=".$_SESSION['userid']);
   $users = $conn->query("select * from usertbl where userid=".$_SESSION['userid'])
   ?>
   <div class=textbox>
     <h2><?php
+
+    //echo the name of the user to personalize the page
     $user = $users->fetch_assoc();
     echo $user["firstname"]." ".$user["lastname"];
     ?></h2>
@@ -40,11 +44,14 @@
     <hr />
     <h3 style='text-align:left'>Unsubscribe:</h3>
     <?php
+
+    //if there are no subscriptions, output a message
     if ($stocks->num_rows==0) {
       echo "<p>
       No Subscriptions
       </p>";
     }
+    //else echo a list of them with checkboxes
     else {
       echo "<div class=textbox style='text-align:center'><form action=unsubscribe.php method=post ><hr />";
       while ($stock = $stocks->fetch_assoc()) {

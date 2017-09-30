@@ -7,6 +7,8 @@
 </head>
 <body>
   <?php
+
+  //make sure the user is logged in
   if (!isset($_SESSION["userid"])) {
     echo "<script>
     window.alert('Please Log in');
@@ -29,17 +31,24 @@
     </form>
   </div>
   <?php
+
+    //if the user has entered a search term
     if (isset($_GET["search"])) {
+      //make sure there are no suspicious characters in the search
       if (strchr($_GET['search'],';') !== FALSE or strchr($_GET["search"],',') !== FALSE) {
         echo "Please only search words.";
       } else {
+        //otherwise select relevant stocks from the database
         $conn = new mysqli("localhost", "georgegarber", "password", "marketanalysisdb");
         $stocks = $conn->query("select * from instruments where description like '%".$_GET["search"]."%';");
+
+        //ouput message if there are no stocks
         if ($stocks->num_rows==0) {
           echo "<p>
           No results
           </p>";
         }
+        //else output a list of the relevant stocks
         else {
           echo "<div class=textbox style='text-align:center'><form action=subscribe.php method=post ><hr />";
           while ($stock = $stocks->fetch_assoc()) {
