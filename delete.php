@@ -6,8 +6,8 @@
   $conn->query("delete from usertbl where userid=".$_SESSION['userid']);
 
   //resets the userid variable
-  $_SESSION['userid'] =NULL;
+  $_SESSION['userid'] = null;
 
   //takes the user home
   header('Location: .');
- ?>
+?>

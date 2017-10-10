@@ -6,15 +6,15 @@
   <title>MA Data</title>
 </head>
 <body>
-  <?php
+    <?php
   //if no user has signed in, a javascript error message appears and the user will be taken home
-  if (!isset($_SESSION["userid"])) {
-      echo "<script>
+    if (!isset($_SESSION["userid"])) {
+        echo "<script>
     window.alert('Please Log in');
     window.location.href='.';
     </script>";
-  }
-   ?>
+    }
+    ?>
   <ul>
     <li><a href="settings.php" >Settings</a></li>
     <li><a class=active href="data.php" >Data</a></li>
@@ -25,7 +25,7 @@
   <br />
   <hr />
   <br />
-  <?php
+    <?php
     //connection set up, and list of stocks queried from the database
     $conn = new mysqli("localhost", "georgegarber", "password", "marketanalysisdb");
     $stocks = $conn->query("select * from instruments inner join subscriptions on (subscriptions.instrumentid=instruments.instrumentid) where subscriptions.userid='".$_SESSION['userid']."'");
@@ -35,54 +35,52 @@
         echo "<p>
       No Subscriptions found
       </p>";
-    }
-    //otherwise list of stocks generated
+    } //otherwise list of stocks generated
     else {
         echo "<ul class=menu>";
 
         //iterate through all subscribed stocks
         while ($stock = $stocks->fetch_assoc()) {
-
           //has the prediction been found yet?
-          if (!isset($_SESSION['predictions'][$stock["instrumentid"]])) {
-              //get prediction, delete file created
-              $p = explode(',', exec('/usr/local/bin/python3 /Library/WebServer/Documents/marketanalysis/analyse.py '.$stock["instrumentid"]))[0];
-              $_SESSION['predictions'][$stock["instrumentid"]] = $p;
-              unlink(explode('/', $stock["instrumentid"])[1].'.csv');
-          }
+            if (!isset($_SESSION['predictions'][$stock["instrumentid"]])) {
+                //get prediction, delete file created
+                $p = explode(',', exec('/usr/local/bin/python3 /Library/WebServer/Documents/marketanalysis/analyse.py '.$stock["instrumentid"]))[0];
+                $_SESSION['predictions'][$stock["instrumentid"]] = $p;
+                unlink(explode('/', $stock["instrumentid"])[1].'.csv');
+            }
 
           //set font colour variable
-          $fcolour = '#e2e2e2';
+            $fcolour = '#e2e2e2';
 
           //switch to determine correct colour for prediction
-          switch ($_SESSION['predictions'][$stock["instrumentid"]]) {
-            case '-1.0 ':
-              $colour = 'red';
-              break;
-            case '0.0 ':
-              $colour = 'yellow';
-              $fcolour = '#505050';
-              break;
-            case '1.0 ':
-              $colour = 'green';
-              break;
-          }
+            switch ($_SESSION['predictions'][$stock["instrumentid"]]) {
+                case '-1.0 ':
+                    $colour = 'red';
+                    break;
+                case '0.0 ':
+                    $colour = 'yellow';
+                    $fcolour = '#505050';
+                    break;
+                case '1.0 ':
+                    $colour = 'green';
+                    break;
+            }
 
           //create the list entry
-          echo "<li style='background-color: ".$colour."' class=menu_item>
+            echo "<li style='background-color: ".$colour."' class=menu_item>
           <a style='color: ".$fcolour."' class=menu_item_text href=data.php?stock=".$stock["instrumentid"].">".$stock["description"]."</a>
           </li>";
-
         }
         echo "</ul>";
     }
 
     //set the time
     date_default_timezone_set('UTC');
+    $today = new DateTime();
+    $year = $today->modify('-3 days')->format('Y');
 
     //if a user has clicked on a stock
     if (isset($_GET['stock'])) {
-
       //run analyse.py (storing the prediction in $p) and collect all the data in a new array
         $p = exec('/usr/local/bin/python3 /Library/WebServer/Documents/marketanalysis/analyse.py '.$_GET['stock']);
         if (($handle = fopen(explode('/', $_GET['stock'])[1].'.csv', 'r')) !== false) {
@@ -101,9 +99,9 @@
                 $currency = $stock['currency'];
             }
         }
+        $upToDate = false;
     }
-
-   ?>
+    ?>
    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
    <script type="text/javascript">
 
@@ -120,9 +118,12 @@
         data.addColumn('number', '<?php echo $_GET['stock']; ?>');
         data.addColumn('number', 'SAR')
         data.addRows([ <?php
-          foreach ($data as $day) {
-              echo '[ new Date('.$day[0]->format('Y, m ,d').'), '.$day[1].', '.$day[2].'],';
-          }
+        foreach ($data as $day) {
+            echo '[ new Date('.$day[0]->format('Y, m ,d').'), '.$day[1].', '.$day[2].'],';
+            if ($day[0]->format('Y') == $year) {
+                   $upToDate = true;
+            }
+        }
         ?>]);
 
         //assocciate the dashboard with an html element
@@ -181,9 +182,11 @@
           timeSlider.setState({'lowValue': new Date().setDate(today.getDate()-8), 'highvalue': today});
           timeSlider.draw();
         };
-      }
+    }
    </script>
-   <div id='dashboard_div' style='margin:auto; width:70%; background-color: white;'>
+   <div id='dashboard_div' style='margin:auto; width:60%; background-color: white; <?php if (!isset($_GET["stock"])) {
+        echo "display: none;";
+} ?>' >
    <div id='filter_div' style="display: none"></div>
    <table style='margin:auto; border-spacing: 10px'>
    <tr>
@@ -197,10 +200,11 @@
    </table>
    <div id='chart_div' style='height: 50%'></div>
    <p style='text-align:center'>
-     <?php if (isset($_GET["stock"])) {
-            $ps = explode(',', $p);
-            echo 'Prediction: '.$ps[0].', Accuracy: '.$ps[1].'%';
-        } ?></p>
+        <?php if (isset($_GET["stock"])) {
+                $ps = explode(',', $p);
+                echo 'Prediction: '.$ps[0].', Accuracy: '.$ps[1].'%';
+                if (!$upToDate) {echo "<br />Incomplete data, may display incorrectly.";}
+            } ?></p>
    </div>
 </body>
 </html>
