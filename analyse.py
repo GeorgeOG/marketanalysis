@@ -54,7 +54,7 @@ def sar(alpha):
     a = alpha
     a_limit = 0.2
 
-    # is the stock in an uptrend? what is the extreme point in the current uptrend?
+    # is the stock in an uptrend? what's the extreme point in the uptrend?
     upTrend = (prediction_data[0] < prediction_data[1])
     ep = prediction_data[0]
     sar = prediction_data[0]
@@ -65,7 +65,7 @@ def sar(alpha):
     # update for each datapoint
     for i in range(1, len(prediction_data) - 1):
 
-        # if the next datapoint is inside the sar value, change the direction of the trend
+        # if the next datapoint is inside the sar value, change the trend
         if (prediction_data[i] < sar and upTrend) or (prediction_data[i] > sar
                                                       and not upTrend):
             upTrend = not upTrend
@@ -75,7 +75,7 @@ def sar(alpha):
         # calculate the value of the sar
         sar = sar + a * (ep - sar)
 
-        # if the next datapoint is outside the extreme point, update the extreme point and increase alpha
+        # if the next datapoint is outside the ep, update ep and increase alpha
         if (prediction_data[i] > ep and upTrend) or (prediction_data[i] < ep
                                                      and not upTrend):
             ep = prediction_data[i]
@@ -88,7 +88,7 @@ def sar(alpha):
             if prediction_data[i] - sar > 0:
                 sar = sar + a * (ep - sar)
 
-        # the next two statements just prevent the sar from moving outside the value too easily
+        # the next two statements stop the sar from changing too easily
         if (prediction_data[i] < sar and upTrend) or (prediction_data[i] > sar
                                                       and not upTrend):
             sar = prediction_data[i]
@@ -110,5 +110,5 @@ def sar(alpha):
 
 
 # run the sar function with the given value of alpha
-sar(0.05)
+sar(0.1)
 csvfile.close()
